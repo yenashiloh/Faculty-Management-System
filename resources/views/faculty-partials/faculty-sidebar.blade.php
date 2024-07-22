@@ -129,18 +129,26 @@
                     </a>
                     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header">
-                            <h4 class="text-center"><span class="text-muted text-center"
-                                    style="font-size: 20px;">Shiloh Eugenio</span></h4>
+                            <h4 class="text-center">  <span class="text-muted text-center" style="font-size: 20px;">
+                                {{ $facultyDetails['first_name'] ?? '' }} {{ $facultyDetails['last_name'] ?? '' }}
+                            </span></h4>
                             <p class="text-muted text-center">Professor</p>
                             <hr class="mb-0 mt-0">
-                            <a href="{{route ('admin.admin-profile')}}" class="dropdown-item">
+                            <a href="{{route ('faculty.faculty-profile')}}" class="dropdown-item">
                                 <i class="fas fa-user"></i>
                                 <span>Profile</span>
                             </a>
-                            <a href="../pages/login-v1.html" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Log out</span>
+                            <a href="{{route ('faculty.faculty-profile')}}" class="dropdown-item">
+                                <i class="fas fa-lock"></i>
+                                <span>Change Password</span>
                             </a>
+                            <form action="{{ url('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Log out</span>
+                                </button>
+                            </form>                            
                         </div>
                     </div>
                </div>

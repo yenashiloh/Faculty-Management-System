@@ -46,7 +46,7 @@ body, html {
 .card-role {
     z-index: 3; 
     width: 100%;
-    max-width: 900px; 
+    max-width: 700px; 
     height: 450px;
     padding: 20px;
     border: none;
@@ -145,15 +145,17 @@ body, html {
 /*****LOG IN VALIDATION**********/
 
 .form-label {
-    margin-bottom: 0; /* Remove default margin from the label */
+    margin-bottom: 0;
 }
 
 .input-group {
-    margin-bottom: 1rem; /* Adjust margin bottom of input field if needed */
+    margin-bottom: 1rem;
 }
 
 .error-message {
-    margin-left: 0.5rem; /* Add some space between the label and error message */
-    color: red; /* Ensure error message is visible */
+    margin-left: 0.5rem;
+    color: red;
     text-align: left;
 }
+
+/*******RECORDS**************/

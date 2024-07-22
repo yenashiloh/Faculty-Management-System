@@ -1,0 +1,39 @@
+
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-trigger {
+    cursor: pointer;
+}
+
+.custom-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.custom-dropdown a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.custom-dropdown a:hover {
+    background-color: #e0e0e0;
+}
+
+.records-folder {
+    width: 5%
+}
+
+.folder-records{
+    color: #F7D328; 
+    font-size: 70px;
+}

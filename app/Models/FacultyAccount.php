@@ -38,6 +38,8 @@ class FacultyAccount extends Authenticatable
 
     public function personalDetails()
     {
-        return $this->hasOne(FacultyPersonalDetails::class, 'faculty_account_id');
+        return $this->hasOne(FacultyPersonalDetails::class, 'faculty_account_id', 'faculty_account_id');
     }
+
+    
 }

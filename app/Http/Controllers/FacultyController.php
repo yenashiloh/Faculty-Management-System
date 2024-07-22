@@ -6,45 +6,158 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use App\Models\FacultyAccount;
 use App\Models\FacultyPersonalDetails;
 
 class FacultyController extends Controller
 {
+    //landing page role 
     public function showRolePage()
     {
         return view('role');
     }
 
+    //login
     public function showLoginPage()
     {
         return view('faculty-login');
     }
 
+    //records
     public function showRecordsPage()
     {
-        return view('faculty.faculty-records');
+        if (!auth()->check()) {
+            return redirect()->route('faculty-login');
+        }
+    
+        $facultyDetails = $this->getFacultyDetails();
+        return view('faculty.faculty-records', compact('facultyDetails'));
     }
 
+    //trash
     public function showTrashPage()
     {
         return view('faculty.faculty-trash');
     }
 
+    //history
     public function showHistoryPage()
     {
         return view('faculty.history');
     }
 
+    //storage
     public function showStoragePage()
     {
         return view('faculty.faculty-storage');
     }
 
+    //profile 
     public function showProfilePage()
     {
-        return view('faculty.faculty-profile');
+        if (!auth()->check()) {
+            return redirect()->route('faculty-login');
+        }
+
+        $facultyDetails = $this->getFacultyDetails();
+        return view('faculty.faculty-profile', compact('facultyDetails'));
     }
+
+    //update profile
+    // public function updateProfile(Request $request)
+    // {
+      
+    //     // Validate the incoming request
+    //     $request->validate([
+    //         'first_name' => 'required|string|max:255',
+    //         'middle_name' => 'nullable|string|max:255',
+    //         'last_name' => 'required|string|max:255',
+    //         'email' => 'required|email|max:255',
+    //         'birthday' => 'required|date',
+    //         'sex' => 'required|string',
+    //         'department' => 'required|string|max:255',
+    //         'id_number' => 'required|string|max:255',
+    //         'employee_type' => 'required|string',
+    //         'phone_number' => 'required|string|max:15',
+    //     ]);
+    
+    //     try {
+    //         // Get the authenticated user
+    //         $faculty = Auth::user();
+    //         Log::info('Attempting to update profile for user: ' . $faculty->faculty_account_id);
+    //         // Update the faculty account details
+    //         $faculty->update([
+    //             'email' => $request->input('email'),
+    //         ]);
+    
+    //         // Update or create personal details
+    //         $personalDetails = $faculty->personalDetails()->firstOrNew(['faculty_account_id' => $faculty->faculty_account_id]);
+    //         $personalDetails->update([
+    //             'first_name' => $request->input('first_name'),
+    //             'middle_name' => $request->input('middle_name'),
+    //             'last_name' => $request->input('last_name'),
+    //             'birthday' => $request->input('birthday'),
+    //             'sex' => $request->input('sex'),
+    //             'department' => $request->input('department'),
+    //             'id_number' => $request->input('id_number'),
+    //             'employee_type' => $request->input('employee_type'),
+    //             'phone_number' => $request->input('phone_number'),
+    //         ]);
+    
+    //         // Redirect back with a success message
+    //         return redirect()->route('faculty-profile')->with('success', 'Profile updated successfully!');
+    //     } catch (\Exception $e) {
+    //         // Log the exception message
+    //         Log::error('Profile update failed: ' . $e->getMessage());
+    
+    //         // Redirect back with an error message
+    //         return redirect()->route('faculty-profile')->with('error', 'An error occurred while updating your profile. Please try again.');
+    //     }
+    // }
+    
+//     public function updateProfile(Request $request)
+// {
+//     $facultyAccount = Auth::guard('faculty_account')->user();
+    
+//     if ($facultyAccount) {
+//         $validateData = $request->validate([
+//             'first_name' => 'required|string|max:255',
+//             'middle_name' => 'nullable|string|max:255',
+//             'last_name' => 'required|string|max:255',
+//             'email' => 'required|email|unique:faculty_account,email,' . $facultyAccount->faculty_account_id,
+//             'birthday' => 'required|date',
+//             'sex' => 'required|in:Male,Female', 
+//             'department' => 'required|string|max:255',
+//             'id_number' => 'required|string|max:255',
+//             'employee_type' => 'required|in:Part Time,Regular',
+//             'phone_number' => 'required|string|max:11',
+//         ]);
+
+//         $facultyAccount->update([
+//             'email' => $validateData['email'],
+//         ]);
+
+//         $facultyAccount->personalDetails()->update([
+//             'first_name' => $validateData['first_name'],
+//             'middle_name' => $validateData['middle_name'],
+//             'last_name' => $validateData['last_name'],
+//             'birthday' => $validateData['birthday'],
+//             'sex' => $validateData['sex'],
+//             'department' => $validateData['department'],
+//             'id_number' => $validateData['id_number'],
+//             'employee_type' => $validateData['employee_type'],
+//             'phone_number' => $validateData['phone_number'],
+//         ]);
+        
+//         $request->session()->flash('success', 'Profile updated successfully!');
+//         return redirect()->route('faculty.faculty-profile');
+//     } else {
+//         $request->session()->flash('error', 'Failed to update profile.');
+//         return redirect()->route('faculty.faculty-profile');
+//     }
+// }
 
     public function showSignUpPage()
     {
@@ -66,7 +179,7 @@ class FacultyController extends Controller
         return view('verified');
     }
     
-    
+    //create account
     public function signUpPost(Request $request)
     {
         $request->validate([
@@ -123,6 +236,7 @@ class FacultyController extends Controller
 
     }
 
+    //login faculty
     public function loginPost(Request $request)
     {
         $request->validate([
@@ -150,12 +264,13 @@ class FacultyController extends Controller
             }
 
             Log::debug('Login successful');
-            return redirect()->intended(route('faculty.faculty-records'));
+            return redirect()->intended(route('faculty.faculty-records')); // Redirect to records page
         }
 
         return redirect(route('faculty-login'))->with("error", "Incorrect email address or password. Please try again.");
     }
 
+    //verification otp
     public function verifyOtp(Request $request)
     {
         $request->validate([
@@ -181,7 +296,7 @@ class FacultyController extends Controller
         return redirect()->route('verified');
     }
 
-
+    //resed otp
     public function resendOtp(Request $request)
     {
         $request->validate([
@@ -204,4 +319,37 @@ class FacultyController extends Controller
         return redirect()->back()->with('message', 'A new OTP has been sent to your email.')
                                 ->withInput(['email' => $request->email]);
     }
+
+    //logout
+    public function facultyLogout(Request $request)
+    {
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect(route('faculty-login'));
+    }
+
+    public function getFacultyDetails()
+    {
+        if (Auth::check()) {
+            $faculty = Auth::user();
+            $personalDetails = $faculty->personalDetails;
+            $email = $faculty->email;
+            return [
+                'first_name' => $personalDetails->first_name,
+                'middle_name' => $personalDetails->middle_name,
+                'last_name' => $personalDetails->last_name,
+                'email' => $email,
+                'birthday' => $personalDetails->birthday,
+                'sex' => $personalDetails->sex,
+                'department' => $personalDetails->department,
+                'id_number' => $personalDetails->id_number,
+                'employee_type' => $personalDetails->employee_type,
+                'phone_number' => $personalDetails->phone_number,
+            ];
+        }
+        return null;
+    }
+
+   
 }

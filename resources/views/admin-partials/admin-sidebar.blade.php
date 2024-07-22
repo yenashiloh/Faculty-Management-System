@@ -53,6 +53,14 @@
                  </li>
 
                  <li class="pc-item">
+                    <a href="{{ route('admin.maintenance-module') }}" class="pc-link">
+                        <span class="pc-micon"><i class="fas fa-cogs"></i></span>
+                        <span class="pc-mtext">Maintenance Module</span>
+                    </a>
+                </li>
+
+
+                 <li class="pc-item">
                      <a href="{{ route('admin.storage') }}" class="pc-link">
                          <span class="pc-micon"><i class="fas fa-server"></i></span>
                          <span class="pc-mtext">Storage</span>
@@ -153,10 +161,13 @@
                                  <i class="fas fa-user"></i>
                                  <span>Profile</span>
                              </a>
-                             <a href="../pages/login-v1.html" class="dropdown-item">
-                                 <i class="fas fa-sign-out-alt"></i>
-                                 <span>Log out</span>
-                             </a>
+                             <form action="{{ url('admin-logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Log out</span>
+                                </button>
+                            </form>         
                          </div>
                      </div>
                 </div>

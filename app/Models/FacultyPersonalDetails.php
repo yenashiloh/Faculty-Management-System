@@ -22,9 +22,17 @@ class FacultyPersonalDetails extends Model
         'phone_number'
     ];
     public $timestamps = true;
-    public function faculty()
-{
-    return $this->belongsTo(Faculty::class, 'faculty_account_id');
-}
 
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class, 'faculty_account_id');
+    }
+
+    public function facultyAccount()
+    {
+        return $this->belongsTo(FacultyAccount::class, 'faculty_account_id', 'faculty_account_id');
+    }
+    protected $casts = [
+        'birthday' => 'date',
+    ];
 }

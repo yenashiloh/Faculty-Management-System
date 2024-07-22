@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- [Head] start -->
-
 <head>
     <title>Record</title>
     <!-- [Meta] -->
@@ -9,7 +8,6 @@
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
-
 <body>
 
     @include('faculty-partials.faculty-sidebar')
@@ -39,10 +37,9 @@
                     </div>
                 </div>
             </div>
-
-
             <!-- [ breadcrumb ] end -->
 
+            @auth
             <!-- [ Main Content ] start -->
             <div class="row">
                 <!-- [ semestral] start -->
@@ -52,49 +49,54 @@
                             <div class="card-header">
                                 <h5 class="text-center">1st Semester 21-22</h5>
                             </div>
-                            <div class="card-body d-flex justify-content-center align-items-center"
-                                style="height: 200px;">
+                            <div class="card-body d-flex justify-content-center align-items-center" style="height: 200px;">
                                 <i class="fas fa-folder-open" style="color: #E4E501; font-size: 100px;"></i>
                             </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- [ semestral] end -->
+
+                <div class="col-sm-4">
+                    <a href="records_2.html" class="card-link">
+                        <div class="card card-semester">
+                            <div class="card-header">
+                                <h5 class="text-center">2nd Semester 21-22</h5>
+                            </div>
+                            <div class="card-body d-flex justify-content-center align-items-center" style="height: 200px;">
+                                <i class="fas fa-folder-open" style="color: #E4E501; font-size: 100px;"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- [ semestral] end -->
+
+                <div class="col-sm-4">
+                    <a href="#" class="card-link">
+                        <div class="card card-semester">
+                            <div class="card-header">
+                                <h5 class="text-center">1st Semester 22-23</h5>
+                            </div>
+                            <div class="card-body d-flex justify-content-center align-items-center" style="height: 200px;">
+                                <i class="fas fa-folder-open" style="color: #E4E501; font-size: 100px;"></i>
+                            </div>
+                        </div>
                     </a>
                 </div>
                 <!-- [ semestral] end -->
             </div>
+            <!-- [ Main Content ] end -->
+            @else
+                <div class="alert alert-warning">
+                    You must be logged in to view this page. Please <a href="{{ route('faculty-login') }}">login</a>.
+                </div>
+            @endauth
 
-            <div class="col-sm-4">
-                <a href="records_2.html" class="card-link">
-                    <div class="card card-semester">
-                        <div class="card-header">
-                            <h5 class="text-center">2nd Semester 21-22</h5>
-                        </div>
-                        <div class="card-body d-flex justify-content-center align-items-center" style="height: 200px;">
-                            <i class="fas fa-folder-open" style="color: #E4E501; font-size: 100px;"></i>
-                        </div>
-                </a>
-            </div>
-            <!-- [ semestral] end -->
         </div>
-
-        <div class="col-sm-4">
-            <a href="#" class="card-link">
-                <div class="card card-semester">
-                    <div class="card-header">
-                        <h5 class="text-center">1st Semester 22-23</h5>
-                    </div>
-                    <div class="card-body d-flex justify-content-center align-items-center" style="height: 200px;">
-                        <i class="fas fa-folder-open" style="color: #E4E501; font-size: 100px;"></i>
-                    </div>
-            </a>
-        </div>
-        <!-- [ semestral] end -->
-    </div>
-    <!-- [ Main Content ] end -->
-    </div>
     </div>
     <!-- [ Main Content ] end -->
     @include('faculty-partials.faculty-footer')
 
 </body>
 <!-- [Body] end -->
-
 </html>

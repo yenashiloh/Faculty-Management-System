@@ -45,6 +45,16 @@ return [
             'driver' => 'session',
             'provider' => 'admin_accounts',
         ],
+
+            'faculty_personal_details' => [
+            'driver' => 'session',
+            'provider' => 'faculty_personal_details',
+        ],
+
+        'faculty_account' => [
+            'driver' => 'session',
+            'provider' => 'faculty_accounts',
+        ],
     ],
   
     /*
@@ -75,6 +85,19 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\AdminAccount::class,
         ],
+
+        'faculty_personal_details' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\FacultyPersonalDetails::class,
+        ],
+
+        
+        'faculty_accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\FacultyAccount::class,
+        ],
+
+        
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

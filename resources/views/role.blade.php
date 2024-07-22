@@ -25,7 +25,7 @@
         <div class="overlay"></div>
         <div class="card-role text-center mx-auto">
             <img class="logo-role mb-4" src="../assets/images/pup-logo.png" alt="PUP Logo">
-            <h2 class="text-role mb-4">WELCOME TO PUP-T FACULTY ACADEMIC REQUIREMENTS MANAGER</h2>
+            <h2 class="text-role mb-4">WELCOME TO PUP-T FARM SYSTEM</h2>
             <div class="btn-container d-flex justify-content-center">
                 <a href="{{route ('faculty-login')}}" class="btn btn-primary mx-2 fs-4">Faculty</a>
                 <a href="{{route ('admin-login')}}" class="btn btn-danger mx-2 fs-4">Admin</a>
