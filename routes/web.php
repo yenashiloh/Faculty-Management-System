@@ -19,7 +19,7 @@ Route::post('/faculty-login', [FacultyController::class, 'loginPost'])->name('lo
 Route::get('/otp-verification', [FacultyController::class, 'showOtpVerificationForm'])->name('otp-verification');
 Route::post('/verify-otp', [FacultyController::class, 'verifyOtp'])->name('verify-otp');
 
-//Records
+//Record
 Route::get('/faculty-records', [FacultyController::class, 'showRecordsPage'])->name('faculty.faculty-records');
 
 //Trash
