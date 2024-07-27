@@ -109,7 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateHeader(step) {
-        const headers = ['Step 1: Create Account', 'Step 2: Personal Details'];
+        const headers = [
+            'Step 1: Create Account',
+            'Step 2: Personal Details',
+            'Step 3: Additional Details',
+            'Step 4: Select Programs'
+        ];
         stepHeader.innerText = headers[step];
     }
 
@@ -126,21 +131,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     nextButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const passwordError = document.getElementById('password-error');
-            const confirmPasswordError = document.getElementById('confirm-password-error');
-
-            if (passwordError.style.display === 'block' || confirmPasswordError.style.display === 'block') {
+            // Check if there are validation errors in the current step
+            if (!validateStep(currentStep)) {
                 return; 
             }
-    
-            if (validateStep(currentStep)) {
-                currentStep = Math.min(currentStep + 1, steps.length - 1);
-                showStep(currentStep);
-            }
+
+            currentStep = Math.min(currentStep + 1, steps.length - 1);
+            showStep(currentStep);
         });
     });
 
-    
     prevButtons.forEach(button => {
         button.addEventListener('click', () => {
             currentStep = Math.max(currentStep - 1, 0);
@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     showStep(currentStep);
 });
-
 /**
  * Login Validation
  */
@@ -276,3 +275,4 @@ document.getElementById('submit-btn').addEventListener('click', function(event) 
         event.preventDefault(); 
     }
 });
+

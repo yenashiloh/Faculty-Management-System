@@ -22328,6 +22328,7 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.form-
 
 .logo-container img {
   margin-right: 10px; 
+  overflow: visible;
 }
 .faculty{
   margin-top: 15px;
@@ -22448,4 +22449,26 @@ select.form-control[data-multiselectsplitter-firstselect-selector], select.form-
 
 .resend {
   font-size: 12px;
+}
+.ck-editor__editable_inline {
+  min-height: 250px;
+}
+.announcement-timestamp {
+  font-size: 0.9em;
+  color: gray;
+  margin-top: 5px;
+}
+.toast-container {
+  padding: 0;
+  margin: 0;  
+}
+.toast {
+  margin-right: 0; 
+}
+#toast-container {
+  z-index: 9999;
+}
+.trashed {
+  opacity: 0.5; 
+  text-decoration: line-through;
 }

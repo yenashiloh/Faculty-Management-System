@@ -32,7 +32,6 @@
             <!-- [ breadcrumb ] end -->
 
             <!-- [ Main Content ] start -->
-            <!-- [ Main Content ] start -->
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">

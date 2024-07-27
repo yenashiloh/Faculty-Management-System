@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-    <title>Records</title>
-    @include('faculty-partials.faculty-header')
+    <title>Record</title>
+    @include('admin-partials.admin-header')
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/records.css">
+    <link rel="stylesheet" href="../../assets/css/records.css">
 </head>
 
 <body>
-    @include('faculty-partials.faculty-sidebar')
+    @include('admin-partials.admin-sidebar')
 
     <div class="pc-container">
         <div class="pc-content">
@@ -19,6 +19,9 @@
                         <div class="col-md-12 d-flex align-items-center justify-content-between">
                             <ul class="breadcrumb mb-0 d-flex align-items-center">
                                 <li class="breadcrumb-item fw-bolder fs-4 mb-0">YEAR SEMESTRAL ENDS</li>
+                                <li class="breadcrumb-item mb-0"><a href="{{ route('admin.admin-records') }}">
+                                        {{ $folder->file_name }}</a></li>
+
                             </ul>
                             <div class="col-md-4 text-end mt-0">
                                 <div class="dropdown-container">
@@ -53,6 +56,8 @@
                                     <label for="folderName" class="form-label">Folder Name</label>
                                     <input type="text" class="form-control" id="folderName" name="folderName"
                                         required>
+
+                                    <input type="hidden" id="currentSemestralId" value="{{ $folder->semestral_id }}">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Create</button>
                             </form>
@@ -119,26 +124,22 @@
             <div class="row existing-folders">
                 <!-- Existing folder cards here -->
             </div>
-
             <div class="row new-folders" id="folderList">
                 @foreach ($folders as $folder)
-                    <div class="col-sm-4 ">
+                    <div class="col-sm-4 mb-4">
                         <div class="card card-semester">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">{{ $folder->file_name }}</h5>
+                                <h5 class="mb-0">{{ $folder->folder_name }}</h5>
                                 <div class="dropdown-container">
-                                    <i class="fas fa-ellipsis-h dropdown-trigger records-folder"
-                                        data-folder-id="{{ $folder->semestral_id }}"></i>
-                                    <div class="custom-dropdown" id="dropdown-{{ $folder->semestral_id }}" style="width: 150px;">
-                                        <a href="#"
-                                            onclick="showEditModal({{ $folder->semestral_id }}, '{{ $folder->file_name }}')"><i class="fas fa-edit"></i> Edit</a>
-                                            <a href="#" class="delete-folder" data-folder-id="{{ $folder->semestral_id }}"><i class="fa fa-trash"></i> Move to trash</a>
+                                    <i class="fas fa-ellipsis-h dropdown-trigger records-folder" data-folder-id="{{ $folder->year_semestral_folders_id}}"></i>
+                                    <div class="custom-dropdown" id="dropdown-{{ $folder->year_semestral_folders_id}}">
+                                        <a href="#" onclick="showEditModal({{ $folder->year_semestral_folders_id }}, '{{ $folder->folder_name }}')">Edit</a>
+                                        <a href="#" class="delete-folder" data-folder-id="{{ $folder->year_semestral_folders_id }}">Delete</a>
                                     </div>
                                 </div>
                             </div>
-                            <a href="" class="card-link">
-                                <div class="card-body d-flex justify-content-center align-items-center"
-                                    style="height: 200px;">
+                            <a href="{{ url('records/records/' . $folder->year_semestral_folders_id) }}" class="card-link">
+                                <div class="card-body d-flex justify-content-center align-items-center" style="height: 200px;">
                                     <i class="fas fa-folder-open folder-records"></i>
                                 </div>
                             </a>
@@ -146,18 +147,20 @@
                     </div>
                 @endforeach
             </div>
+            
         </div>
     </div>
-        @include('faculty-partials.faculty-footer')
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-        <script>
-            var createFolderUrl = "{{ route('faculty.create-semestral-folder') }}";
-            var currentUrl = "{{ url()->current() }}";
-            var csrfToken = "{{ csrf_token() }}";
-        </script>
-        <script src="{{ asset('assets/js/faculty-records.js') }}"></script>
-    </body>
+    @include('admin-partials.admin-footer')
 
-    </html>
+    <script src="{{ asset('assets/js/folder-semestral.js') }}"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var createFolderUrl = "{{ route('create-semestral-folder') }}";
+        var currentUrl = "{{ url()->current() }}";
+        var csrfToken = "{{ csrf_token() }}";
+    </script>
 
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

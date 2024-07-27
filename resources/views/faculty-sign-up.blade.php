@@ -35,6 +35,7 @@
                     <!-- Step 1: Create Account -->
                     <div class="step active">
                         <div class="row mb-3">
+                            
                             <div class="col-md-6 d-flex flex-column">
                                 <label for="email" class="form-label mt-4">Email Address</label>
                                 <input type="email" class="form-control" id="email" name="email"
@@ -64,36 +65,37 @@
                     <!-- Step 2: Personal Details -->
                     <div class="step">
                         <div class="row mb-3">
-                            <div class="col-md-4 d-flex flex-column">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="firstName" class="form-label mt-4">First Name</label>
                                 <input type="text" class="form-control" id="firstName" name="first_name"
-                                    placeholder="Enter your First Name" value="" required>
+                                    placeholder="Enter your First Name" required>
                             </div>
-                            <div class="col-md-4 d-flex flex-column">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="middleName" class="form-label mt-4">Middle Name (optional)</label>
                                 <input type="text" class="form-control" id="middleName" name="middle_name"
-                                    placeholder="Enter your Middle Name" value="">
-                            </div>
-                            <div class="col-md-4 d-flex flex-column">
-                                <label for="lastName" class="form-label mt-4">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="last_name"
-                                    placeholder="Enter your Last Name" value="" required>
+                                    placeholder="Enter your Middle Name">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4 d-flex flex-column">
+                            <div class="col-md-6 d-flex flex-column">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="last_name"
+                                    placeholder="Enter your Last Name" required>
+                            </div>
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="birthday" class="form-label">Birthdate</label>
-                                <input type="date" class="form-control" id="birthday" name="birthday" value=""
-                                    required>
+                                <input type="date" class="form-control" id="birthday" name="birthday" required>
                                 <span id="birthdate-error" class="error-message text-danger mt-2"></span>
                             </div>
-                            <div class="col-md-4 d-flex flex-column">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="phone_number" class="form-label">Phone Number</label>
                                 <input type="tel" class="form-control" id="phone-number" name="phone_number"
-                                    placeholder="Enter your Phone Number" value="" required>
+                                    placeholder="Enter your Phone Number" required>
                                 <span id="phone-number-error" class="error-message text-danger mt-2"></span>
                             </div>
-                            <div class="col-md-4 d-flex flex-column">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="sex" class="form-label">Gender</label>
                                 <select class="form-select" id="sex" name="sex" required>
                                     <option value="" disabled selected>Select your Gender</option>
@@ -102,18 +104,29 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="button"
+                                class="btn btn-secondary prev-step btn-custom-width me-4">Previous</button>
+                            <button type="button" class="btn btn-primary next-step btn-custom-width">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Additional Details -->
+                    <div class="step">
                         <div class="row mb-3">
-                            <div class="col-md-4 d-flex flex-column">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="department" class="form-label">Department</label>
                                 <input type="text" class="form-control" id="department" name="department"
-                                    placeholder="Enter your Department" value="" required>
+                                    placeholder="Enter your Department" required>
                             </div>
-                            <div class="col-md-4 d-flex flex-column">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="idNumber" class="form-label">ID Number</label>
                                 <input type="number" class="form-control" id="idNumber" name="id_number"
-                                    placeholder="Enter your ID Number" value="" required>
+                                    placeholder="Enter your ID Number" required>
                             </div>
-                            <div class="col-md-4 d-flex flex-column">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex flex-column">
                                 <label for="employeeType" class="form-label">Employee Type</label>
                                 <select class="form-select" id="employeeType" name="employee_type" required>
                                     <option value="" disabled selected>Select employee type</option>
@@ -125,11 +138,89 @@
                         <div class="d-flex justify-content-center mt-3">
                             <button type="button"
                                 class="btn btn-secondary prev-step btn-custom-width me-4">Previous</button>
-                            <button type="submit" id="submit-btn" class="btn btn-primary btn-custom-width">Submit</button>
+                            <button type="button" class="btn btn-primary next-step btn-custom-width">Next</button>
                         </div>
-
                     </div>
 
+                    <!-- Step 4: Select Programs -->
+                    <div class="step">
+                        <div class="row mb-3">
+                            <div class="col-md-12 d-flex flex-column">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program1"
+                                                name="programs[]" value="Program1">
+                                            <label class="form-check-label" for="program1">Bachelor of Science in
+                                                Electronics Engineering</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program2"
+                                                name="programs[]" value="Program2">
+                                            <label class="form-check-label" for="program2">Bachelor of Science in
+                                                Mechanical Engineering</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program3"
+                                                name="programs[]" value="Program3">
+                                            <label class="form-check-label" for="program3">Bachelor of Science in
+                                                Applied Mathematics</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program4"
+                                                name="programs[]" value="Program4">
+                                            <label class="form-check-label" for="program4">Bachelor of Science in
+                                                Information Technology</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program5"
+                                                name="programs[]" value="Program5">
+                                            <label class="form-check-label" for="program5">Bachelor of Science in
+                                                Accountancy</label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program6"
+                                                name="programs[]" value="Program7">
+                                            <label class="form-check-label" for="program7">Bachelor of Science in
+                                                Entrepreneurship</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program7"
+                                                name="programs[]" value="Program6">
+                                            <label class="form-check-label" for="program6">Bachelor of Science in
+                                                Business Administration Major in Human Resource Development Management,
+                                                Marketing Management</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program8"
+                                                name="programs[]" value="Program8">
+                                            <label class="form-check-label" for="program8">Bachelor in Secondary
+                                                Education major in English, Mathematics</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program9"
+                                                name="programs[]" value="Program9">
+                                            <label class="form-check-label" for="program9">Diploma in Information
+                                                Communication Technology</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="program10"
+                                                name="programs[]" value="Program6">
+                                            <label class="form-check-label" for="program6">Bachelor of Science in
+                                                Business Administration Major in Human Resource Development Management,
+                                                Marketing Management</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button type="button"
+                                        class="btn btn-secondary prev-step btn-custom-width me-4">Previous</button>
+                                    <button type="submit" class="btn btn-primary btn-custom-width">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

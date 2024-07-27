@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (successMessage) {
         setTimeout(() => {
             successMessage.style.display = 'none';
-        }, 3000);
+        }, 5000);
     }
 });
 
@@ -46,13 +46,23 @@ document.addEventListener('click', function(event) {
         const dropdown = document.getElementById(`dropdown-${folderId}`);
         dropdown.style.display = 'block';
 
-        dropdown.querySelector('a[onclick^="showEditModal"]').addEventListener('click', function(e) {
+        // Remove existing event listeners
+        const oldEditLink = dropdown.querySelector('a[onclick^="showEditModal"]');
+        const newEditLink = oldEditLink.cloneNode(true);
+        oldEditLink.parentNode.replaceChild(newEditLink, oldEditLink);
+
+        const oldDeleteLink = dropdown.querySelector('a.delete-folder');
+        const newDeleteLink = oldDeleteLink.cloneNode(true);
+        oldDeleteLink.parentNode.replaceChild(newDeleteLink, oldDeleteLink);
+
+        // Add new event listeners
+        newEditLink.addEventListener('click', function(e) {
             e.preventDefault();
             const editFolderModal = new bootstrap.Modal(document.getElementById('editFolderModal'));
             editFolderModal.show();
         });
 
-        dropdown.querySelector('a[onclick^="showDeleteModal"]').addEventListener('click', function(e) {
+        newDeleteLink.addEventListener('click', function(e) {
             e.preventDefault();
             const deleteFolderModal = new bootstrap.Modal(document.getElementById('deleteFolderModal'));
             deleteFolderModal.show();
@@ -67,7 +77,7 @@ document.getElementById('editFolderForm').addEventListener('submit', function(ev
     const folderId = document.getElementById('editFolderId').value;
     const newName = document.getElementById('editFolderName').value;
 
-    fetch(`/admin-records/edit/${folderId}`, {
+    fetch(`/faculty-records/edit/${folderId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -80,13 +90,39 @@ document.getElementById('editFolderForm').addEventListener('submit', function(ev
         if (data.success) {
             document.querySelector(`#dropdown-${folderId}`).closest('.card').querySelector('h5').textContent = newName;
             showToast('Folder renamed successfully!', 'success');
-            bootstrap.Modal.getInstance(document.getElementById('editFolderModal')).hide();
+            
+            const editFolderModal = document.getElementById('editFolderModal');
+            const modal = bootstrap.Modal.getInstance(editFolderModal);
+            modal.hide();
+
+            // Remove modal backdrop and reset form
+            editFolderModal.addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+                event.target.reset();
+            }, { once: true });
         } else {
             showToast('Error renaming folder', 'danger');
         }
     })
     .catch(() => {
         showToast('Error renaming folder', 'danger');
+    });
+});
+// Close dropdown when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+        });
     });
 });
 
@@ -133,7 +169,8 @@ function showToast(message, type) {
     if (!toastContainer) {
         const container = document.createElement('div');
         container.id = 'toast-container';
-        container.className = 'position-fixed bottom-0 end-0 p-3';
+        container.className = 'position-fixed top-0 end-0 p-3';
+        container.style.zIndex = '9999';
         document.body.appendChild(container);
     }
 

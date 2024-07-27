@@ -26,7 +26,7 @@
                 </div>
                 <span class="text-white d-flex align-items-center justify-content-center f-34 f-w-500 my-2">
                   <i class="fas fa-users mr-2" style="color:#54C342;"></i>
-                  <span style="padding-left: 0.5em; color: black;">500</span>
+                  <span style="padding-left: 0.5em; color: black;">{{ $totalFacultyUsers }}</span>
                 </span>              
               </div>
             </div>

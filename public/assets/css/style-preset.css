@@ -35,7 +35,7 @@ body {
 [data-pc-preset=preset-1] {
   --pc-sidebar-active-color: #800000;
   --bs-blue: #800000;
-  --bs-primary: #4d0080;
+  --bs-primary: #800000;;
   --bs-primary-rgb: 33, 150, 243;
   --bs-primary-light: #e9f5fe;
   --bs-secondary: #800000;

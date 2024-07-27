@@ -37,4 +37,10 @@ class AdminAccount extends Authenticatable
         // 'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function announcements()
+    {
+        return $this->hasMany(Announcement::class, 'admin_id');
+    }
+
 }

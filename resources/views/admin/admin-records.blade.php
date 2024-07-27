@@ -136,7 +136,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="{{ url('folder/' . $folder->semestral_id) }}" class="card-link">
+                            <a href="{{ url('records/folder-semestral-ends/' . $folder->semestral_id) }}" class="card-link">
                                 <div class="card-body d-flex justify-content-center align-items-center"
                                     style="height: 200px;">
                                     <i class="fas fa-folder-open folder-records"></i>

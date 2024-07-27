@@ -159,3 +159,20 @@ body, html {
 }
 
 /*******RECORDS**************/
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 10px; /* Adjust as needed for spacing */
+}
+
+.form-check-label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px; /* Adjust the space between the checkbox and the label */
+    white-space: normal; /* Allow the text to wrap */
+    text-align: left; /* Ensure text aligns to the left */
+}
+

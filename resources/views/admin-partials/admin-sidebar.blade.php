@@ -4,7 +4,7 @@
          <div class="m-header">
              <a href="{{ route('admin.admin-home') }}" class="b-brand text-primary">
                  <div class="logo-container">
-                     <img src="../assets/images/pup-logo.png" alt="" class="logo logo-lg">
+                     <img src="{{ asset('assets/images/pup-logo.png') }}" alt="" class="logo logo-lg">
                      <p class="faculty">FARM System</p>
                  </div>
              </a>
@@ -53,20 +53,24 @@
                  </li>
 
                  <li class="pc-item">
-                    <a href="{{ route('admin.maintenance-module') }}" class="pc-link">
-                        <span class="pc-micon"><i class="fas fa-cogs"></i></span>
-                        <span class="pc-mtext">Maintenance Module</span>
+                    <a href="{{ route('admin.admin-storage') }}" class="pc-link">
+                        <span class="pc-micon"><i class="fas fa-server"></i></span>
+                        <span class="pc-mtext">Storage</span>
                     </a>
                 </li>
+                
 
-
-                 <li class="pc-item">
-                     <a href="{{ route('admin.storage') }}" class="pc-link">
-                         <span class="pc-micon"><i class="fas fa-server"></i></span>
-                         <span class="pc-mtext">Storage</span>
-                     </a>
+                 <li class="pc-item pc-hasmenu">
+                     <a href="#!" class="pc-link"><span class="pc-micon"><i class="fas fa-cogs"></i></span><span
+                             class="pc-mtext">Maintenance</span><span class="pc-arrow"><i
+                                 data-feather="chevron-right"></i></span></a>
+                     <ul class="pc-submenu">
+                         <li class="pc-item"><a class="pc-link"
+                                 href="{{ route('admin.announcement.admin-announcement') }}">Announcement</a></li>
+                         <li class="pc-item"><a class="pc-link" href="#!">Create Account</a></li>
                  </li>
              </ul>
+
          </div>
      </div>
  </nav>
@@ -146,7 +150,7 @@
                      <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                          data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                          aria-expanded="false">
-                         <img src="../assets/images/user/user.webp" alt="user-image" class="user-avtar">
+                         <img src="../../../assets/images/user/user.webp" alt="user-image" class="user-avtar">
                          <span>
                              <i class="fas fa-cog"></i>
                          </span>
@@ -154,24 +158,24 @@
                      <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                          <div class="dropdown-header">
                              <h4 class="text-center"><span class="text-muted text-center"
-                                     style="font-size: 20px;">Shiloh Eugenio</span></h4>
+                                     style="font-size: 20px;">{{ $adminName }}</span></h4>
                              <p class="text-muted text-center">Admin</p>
                              <hr class="mb-0 mt-0">
-                             <a href="{{route ('admin.admin-profile')}}" class="dropdown-item">
+                             <a href="{{ route('admin.admin-profile') }}" class="dropdown-item">
                                  <i class="fas fa-user"></i>
                                  <span>Profile</span>
                              </a>
                              <form action="{{ url('admin-logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="dropdown-item">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Log out</span>
-                                </button>
-                            </form>         
+                                 @csrf
+                                 <button type="submit" class="dropdown-item">
+                                     <i class="fas fa-sign-out-alt"></i>
+                                     <span>Log out</span>
+                                 </button>
+                             </form>
                          </div>
                      </div>
-                </div>
-             </li>
+         </div>
+         </li>
          </ul>
      </div>
      </div>

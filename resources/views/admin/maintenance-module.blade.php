@@ -9,7 +9,11 @@
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
-
+<style>
+   .ck-editor__editable_inline {
+      min-height: 250px; /* Adjust this value to set the desired height */
+    }
+</style>
 <body>
 
     @include('admin-partials.admin-sidebar')
@@ -39,7 +43,7 @@
                     <ul class="nav nav-tabs nav-tabs-bordered">
       
                       <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sign-up">Overview</button>
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#announcement">Announcement</button>
                       </li>
       
                       <li class="nav-item">
@@ -53,30 +57,20 @@
                     </ul>
                     <div class="tab-content pt-2">
       
-                      <div class="tab-pane fade show active profile-overview" id="sign-up">
+                      <div class="tab-pane fade show active profile-overview" id="announcement">
                         <br>
-                        <h5 class="card-title">Profile Details</h5>
       
-                        <div class="row mb-2">
-                          <div class="col-lg-3 col-md-4 label ">First Name</div>
-                          <div class="col-lg-9 col-md-8"> </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Subject</label>
+                          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter subject">
                         </div>
-      
-                        <div class="row mb-2">
-                          <div class="col-lg-3 col-md-4 label ">Last Name</div>
-                          <div class="col-lg-9 col-md-8"></div>
+
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Message</label>
+                          <textarea id="announcement-editor"></textarea>
                         </div>
-      
-                        <div class="row mb-2">
-                          <div class="col-lg-3 col-md-4 label">Email</div>
-                          <div class="col-lg-9 col-md-8">   </div>
-                        </div>
-      
-                        <div class="row mb-2">
-                          <div class="col-lg-3 col-md-4 label">Contact Number</div>
-                          <div class="col-lg-9 col-md-8"></div>
-                        </div>
-      
+ 
+
                       </div>
       
                       <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
@@ -132,8 +126,6 @@
                             
                               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                           </div>
-                
-                
                       <div class="row mb-3" id="passwordSuccessAlert">
                       
                     </div>
@@ -177,3 +169,24 @@
 <!-- [Body] end -->
 
 </html>
+<script>
+  
+  ClassicEditor
+    .create(document.querySelector('#announcement-editor'), {
+      toolbar: [
+        'heading', '|', 
+        'bold', 'italic', 'underline', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+        'insertTable', '|',
+        'uploadImage', 'mediaEmbed', '|',
+        'undo', 'redo'
+      ],
+      image: {
+        toolbar: [
+          'imageTextAlternative', 'imageStyle:full', 'imageStyle:side'
+        ]
+      },
+    })
+    .catch(error => {
+      console.error(error);
+    });
+</script>

@@ -19,7 +19,8 @@ class FacultyPersonalDetails extends Model
         'department',
         'id_number',
         'employee_type',
-        'phone_number'
+        'phone_number',
+        'programs'
     ];
     public $timestamps = true;
 
@@ -34,5 +35,6 @@ class FacultyPersonalDetails extends Model
     }
     protected $casts = [
         'birthday' => 'date',
+        'programs' => 'array',
     ];
 }

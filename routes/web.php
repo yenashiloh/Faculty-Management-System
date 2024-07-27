@@ -30,13 +30,28 @@ Route::get('/otp-verification', [FacultyController::class, 'showOtpVerificationF
 Route::post('/verify-otp', [FacultyController::class, 'verifyOtp'])->name('verify-otp');
 
 
-Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
+Route::middleware(['auth'])->group(function () {
     //Records
     Route::get('/faculty-records', [FacultyController::class, 'showRecordsPage'])->name('faculty.faculty-records');
+
+    //Edit and Delete Records
+    Route::post('/faculty-records/edit/{semestral_end:semestral_id}', [FacultyController::class, 'editRecordFolder'])->name('edit.folder');
+    Route::post('/faculty-records/delete/{semestral_end:semestral_id}', [FacultyController::class, 'deleteRecordFolder'])->name('delete.folder');
+
+    //Create a new folder in faculty-records page
+    Route::post('/faculty/create-semestral-folder', [FacultyController::class, 'createYearSemestral'])->name('faculty.create-semestral-folder');
+    
+    //Semestral Add Folders 
+    Route::post('/records/create-folder-semestral-ends', [AdminController::class, 'createFolderSemestralEnds'])->name('admin.records.create-folder-semestral-ends');
 
     //Trash
     Route::get('/faculty-records', [FacultyController::class, 'showRecordsPage'])->name('faculty.faculty-records');
     Route::get('/faculty-trash', [FacultyController::class, 'showTrashPage'])->name('faculty.faculty-trash');
+    Route::get('/faculty-trash/restore/{id}', [FacultyController::class, 'restoreTrash'])->name('restore-trash');
+    Route::get('/faculty-trash/delete/{id}', [FacultyController::class, 'deleteTrash'])->name('delete-trash');
+    Route::get('/sort-trash/{sort}', [FacultyController::class, 'sortTrash'])->name('sort-trash');
+
+
 
     //History
     Route::get('/faculty-history', [FacultyController::class, 'showHistoryPage'])->name('faculty.faculty-history');
@@ -67,7 +82,7 @@ Route::post('/admin-login', [AdminController::class, 'loginPost'])
     ->name('admin-login.post')
     ->middleware(\App\Http\Middleware\PreventBackHistory::class);
 
-    Route::middleware(['admin', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
 
     //Logout
     Route::post('/admin-logout', [AdminController::class, 'adminLogout'])->name('admin-logout');
@@ -78,10 +93,21 @@ Route::post('/admin-login', [AdminController::class, 'loginPost'])
     //Records
     Route::get('/admin-records', [AdminController::class, 'showRecordPage'])->name('admin.admin-records');
     Route::get('/admin-records/records_1', [AdminController::class, 'showRecordOnePage'])->name('admin.records.records_1');
+    Route::get('/records/folder-semestral-ends/{semestral_id}', [AdminController::class, 'openYearEndsFolder'])->name('folder-semestral-ends');
 
     //Edit and Delete Records
     Route::post('/admin-records/edit/{semestral_end:semestral_id}', [AdminController::class, 'editRecordFolder'])->name('edit.folder');
     Route::post('/admin-records/delete/{semestral_end:semestral_id}', [AdminController::class, 'deleteRecordFolder'])->name('delete.folder');
+
+    //Semestral Folders Edit and Delete Records
+    Route::post('/records/folder-semestral-ends/edit/{year_semestral_folders:year_semestral_folders_id}', [AdminController::class, 'editYearEndFolder'])->name('edit.folder');
+    Route::post('/records/folder-semestral-ends/delete/{year_semestral_folders:year_semestral_folders_id}', [AdminController::class, 'deleteYearEndFolder'])->name('delete.folder');
+
+    //Semestral Add Folders 
+    Route::post('/records/create-folder-semestral-ends', [AdminController::class, 'createFolderSemestralEnds'])->name('admin.records.create-folder-semestral-ends');
+
+    //Open folder with files
+    Route::get('/records/records/{year_semestral_folders_id}', [AdminController::class, 'openFolders'])->name('admin.records.records');
 
     //Test Admistration
     Route::get('/test-administration/test-administration', [AdminController::class, 'showTestAdministrationPage'])->name('admin.test-administration.test-administration');
@@ -90,7 +116,7 @@ Route::post('/admin-login', [AdminController::class, 'loginPost'])
     //Users
     Route::get('/users', [AdminController::class, 'showUsersPage'])->name('admin.users');
 
-    //Access Control
+//Access Control
     Route::get('/access-control', [AdminController::class, 'showAccessControlPage'])->name('admin.access-control');
 
     //Trash
@@ -99,11 +125,22 @@ Route::post('/admin-login', [AdminController::class, 'loginPost'])
     //History
     Route::get('/history', [AdminController::class, 'showHistoryPage'])->name('admin.history');
 
-     //History
-     Route::get('/maintenance-module', [AdminController::class, 'showMaintenanceModulePage'])->name('admin.maintenance-module');
+    //Announcement
+    Route::get('/announcement/admin-announcement', [AdminController::class, 'showAnnouncementPage'])->name('admin.announcement.admin-announcement');
+    Route::get('/announcement/add-announcement', [AdminController::class, 'showAddAnnouncementPage'])->name('admin.announcement.add-announcement');
+    Route::post('/announcement/add-announcement', [AdminController::class, 'saveAnnouncement'])->name('admin.announcement.save-announcement');
+    // Display the edit form
+    Route::get('admin/announcement/edit/{id_announcement}', [AdminController::class, 'editAnnouncement'])->name('admin.announcement.edit-announcement');
+    // Update the announcement
+    Route::post('admin/announcement/update/{id_announcement}', [AdminController::class, 'updateAnnouncement'])->name('admin.announcement.update-announcement');
+    // Delete the announcement
+    Route::delete('admin/announcement/delete/{id_announcement}', [AdminController::class, 'deleteAnnouncement'])->name('admin.announcement.delete-announcement');
+
+    Route::get('admin/announcement/publish/{id_announcement}', [AdminController::class, 'publishAnnouncement'])->name('admin.announcement.publish-announcement');
+    Route::get('admin/announcement/unpublish/{id_announcement}', [AdminController::class, 'unpublishAnnouncement'])->name('admin.announcement.unpublish-announcement');
 
     //Storage
-    Route::get('/storage', [AdminController::class, 'showStoragePage'])->name('admin.storage');
+    Route::get('/admin-storage', [AdminController::class, 'showStoragePage'])->name('admin.admin-storage');
 
     //Admin Profile
     Route::get('/admin-profile', [AdminController::class, 'showProfilePage'])->name('admin.admin-profile');

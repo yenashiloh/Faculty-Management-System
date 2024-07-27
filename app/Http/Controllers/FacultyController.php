@@ -8,8 +8,12 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use App\Models\FacultyAccount;
 use App\Models\FacultyPersonalDetails;
+use App\Models\SemestralEnd;
+use App\Models\YearSemestralFolder;
+
 
 class FacultyController extends Controller
 {
@@ -33,25 +37,229 @@ class FacultyController extends Controller
         }
     
         $facultyDetails = $this->getFacultyDetails();
-        return view('faculty.faculty-records', compact('facultyDetails'));
+        $folders = SemestralEnd::where('trashed', false)->orderBy('created_at', 'desc')->get(); 
+        return view('faculty.faculty-records', compact('folders', 'facultyDetails'));
     }
 
+    //edit folder year ends
+    public function editRecordFolder(Request $request, $id)
+    {
+        try {
+            \Log::info('Editing folder with ID: ' . $id);
+            \Log::info('Request data: ' . json_encode($request->all()));
+            
+            $folder = SemestralEnd::where('semestral_id', $id)->firstOrFail();
+            \Log::info('Found folder: ' . json_encode($folder));
+            
+            $folder->file_name = $request->name;
+            $folder->save();
+            
+            \Log::info('Folder updated successfully');
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            \Log::error('Error editing folder: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    //delete folder year ends
+    public function deleteRecordFolder($id)
+    {
+        try {
+            $folder = SemestralEnd::where('semestral_id', $id)->firstOrFail();
+            $folder->trashed = true;
+            $folder->save();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting folder: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+    }
+    }
+
+
+    //faculty year semestral - records
+    public function createYearSemestral(Request $request)
+    {
+        try {
+            $request->validate([
+                'folderName' => 'required|string|max:255',
+            ]);
+
+            $user = Auth::guard('web')->user();
+
+            if (!$user) {
+                throw new \Exception('Authentication required');
+            }
+
+            $folder = new SemestralEnd();
+            $folder->file_name = $request->folderName;
+
+            if ($user instanceof FacultyAccount) {
+                $folder->faculty_id = $user->faculty_account_id;
+            } elseif ($user instanceof AdminAccount) {
+                $folder->admin_id = $user->id; 
+            } else {
+                throw new \Exception('Invalid user type');
+            }
+
+            $folder->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Folder created successfully!',
+                'folder' => $folder
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error creating folder: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function createFolderSemestralEnds(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'folderName' => 'required|string|max:255',
+                'semestralId' => 'required|integer|exists:semestral_ends,semestral_id',
+            ]);
+    
+            if (!auth()->check()) {
+                return redirect()->route('faculty-login');
+            }
+            
+            $user = auth()->user();
+    
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated user.'
+                ], 401);
+            }
+    
+            $currentSemestralEnd = SemestralEnd::findOrFail($validatedData['semestralId']);
+    
+            $folder = new YearSemestralFolder();
+            $folder->folder_name = $validatedData['folderName'];
+            $folder->semestral_id = $currentSemestralEnd->semestral_id;
+            $folder->admin_id = $user->id;
+    
+            $folder->save();
+    
+            Session::flash('success', 'Folder created successfully!');
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Folder created successfully!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating folder: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
     //trash
     public function showTrashPage()
     {
-        return view('faculty.faculty-trash');
+        if (!auth()->check()) {
+            return redirect()->route('faculty-login');
+        }
+    
+        $facultyDetails = $this->getFacultyDetails();
+    
+        $user = auth()->user();
+        $facultyAccountId = $user->faculty_account_id;
+    
+    
+        $trashedItems = SemestralEnd::where('trashed', 1)
+                            ->where('faculty_id', $facultyAccountId)
+                            ->with('faculty') 
+                            ->get();
+
+        \Log::info('Trashed items:', $trashedItems->toArray());
+    
+        return view('faculty.faculty-trash', compact('facultyDetails', 'trashedItems'));
+    }
+    
+
+    public function restoreTrash($id)
+    {
+        $item = SemestralEnd::find($id);
+        if ($item) {
+            $item->trashed = 0; 
+            $item->save();
+            return redirect()->route('faculty.faculty-trash')->with('success', 'Item restored successfully.');
+        }
+        return redirect()->route('faculty.faculty-trash')->with('error', 'Item not found.');
+    }
+    
+
+    public function sortTrash($sort)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('faculty-login');
+        }
+
+        $facultyDetails = $this->getFacultyDetails();
+        $user = auth()->user();
+        $facultyAccountId = $user->faculty_account_id;
+
+        // Retrieve data
+        $trashedItems = SemestralEnd::where('trashed', 1)
+                                    ->where('faculty_id', $facultyAccountId)
+                                    ->with('faculty')
+                                    ->get();
+
+        // Convert to Philippine Time and sort
+        $trashedItems = $trashedItems->map(function ($item) {
+            $item->updated_at = \Carbon\Carbon::parse($item->updated_at)->setTimezone('Asia/Manila');
+            return $item;
+        });
+
+        // Sort the collection
+        if ($sort === 'latest') {
+            $trashedItems = $trashedItems->sortByDesc('updated_at');
+        } elseif ($sort === 'oldest') {
+            $trashedItems = $trashedItems->sortBy('updated_at');
+        }
+
+        return view('faculty.faculty-trash', compact('facultyDetails', 'trashedItems'));
+    }
+
+    public function deleteTrash($id)
+    {
+        $semestralEnd = SemestralEnd::findOrFail($id);
+
+        $semestralEnd->delete();
+
+        return redirect()->route('faculty.faculty-trash')->with('success', 'Item deleted successfully!');
     }
 
     //history
     public function showHistoryPage()
     {
-        return view('faculty.history');
+         if (!auth()->check()) {
+            return redirect()->route('faculty-login');
+        }
+
+        $facultyDetails = $this->getFacultyDetails();
+        return view('faculty.history', compact('facultyDetails'));
     }
 
     //storage
     public function showStoragePage()
-    {
-        return view('faculty.faculty-storage');
+    { 
+        if (!auth()->check()) {
+            return redirect()->route('faculty-login');
+        }
+
+        $facultyDetails = $this->getFacultyDetails();
+        return view('faculty.faculty-storage', compact('facultyDetails'));
     }
 
     //profile 
@@ -194,6 +402,8 @@ class FacultyController extends Controller
             'employee_type' => 'required|in:Part Time,Regular',
             'phone_number' => 'required|string|max:11',
             'password' => 'required|min:8|confirmed', 
+            'programs' => 'array', 
+            'programs.*' => 'string', 
         ]);
 
         $otp = rand(100000, 999999); 
@@ -219,6 +429,7 @@ class FacultyController extends Controller
             'id_number',
             'employee_type',
             'phone_number',
+            'programs',
         ]);
 
         $personalDetailsData['faculty_account_id'] = $faculty->faculty_account_id;
@@ -238,37 +449,37 @@ class FacultyController extends Controller
 
     //login faculty
     public function loginPost(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        $credentials = $request->only('email', 'password');
+    $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $faculty = Auth::user();    
+    if (Auth::guard('web')->attempt($credentials)) {
+        $faculty = Auth::guard('web')->user();    
 
-            if ($faculty instanceof FacultyAccount) {
-                Log::debug('User is an faculty');
+        if ($faculty instanceof FacultyAccount) {
+            Log::debug('User is a faculty');
 
-                if (!$faculty->verify_status) {
-                    Auth::logout();
-                    return redirect(route('faculty-login'))->with("error", "Your email is not verified. Please verify your email before logging in.");
-                }
-
-                if ($faculty->verification_code) {
-                    Auth::logout();
-                    return redirect(route('faculty-login'))->with("error", "Your account is not verified. Please verify your email before logging in.");
-                }
+            if (!$faculty->verify_status) {
+                Auth::guard('web')->logout();
+                return redirect(route('faculty-login'))->with("error", "Your email is not verified. Please verify your email before logging in.");
             }
 
-            Log::debug('Login successful');
-            return redirect()->intended(route('faculty.faculty-records')); // Redirect to records page
+            if ($faculty->verification_code) {
+                Auth::guard('web')->logout();
+                return redirect(route('faculty-login'))->with("error", "Your account is not verified. Please verify your email before logging in.");
+            }
         }
 
-        return redirect(route('faculty-login'))->with("error", "Incorrect email address or password. Please try again.");
+        Log::debug('Login successful');
+        return redirect()->intended(route('faculty.faculty-records')); 
     }
+
+    return redirect(route('faculty-login'))->with("error", "Incorrect email address or password. Please try again.");
+}
 
     //verification otp
     public function verifyOtp(Request $request)

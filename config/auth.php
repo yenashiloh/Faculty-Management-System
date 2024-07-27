@@ -38,8 +38,8 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
-        ],
+            'provider' => 'faculty_accounts',
+    ],
 
         'admin' => [
             'driver' => 'session',
